@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="PowerMauiApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:PowerMauiApp"
+    Shell.FlyoutBehavior="Disabled"
+    Title="PowerMauiApp">
+
+    <TabBar>
+        <Tab Title="Home" Icon="home.png">
+            <ShellContent ContentTemplate="{DataTemplate local:HomePage}" Route="homepage" />
+        </Tab>
+        <Tab Title="Data" Icon="list.svg">
+            <ShellContent Appearing="DataTab_Appearing" Route="data" ContentTemplate="{DataTemplate local:HomeFrame}" />
+        </Tab>
+        <Tab Title="Report" Icon="report.svg">
+            <ShellContent Appearing="ReportTab_Appearing" Route="report" ContentTemplate="{DataTemplate local:HomeFrame}" />
+        </Tab>
+    </TabBar>
+</Shell>

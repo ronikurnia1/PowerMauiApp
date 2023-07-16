@@ -1,0 +1,58 @@
+﻿@page "/report/{userName}"
+
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Options
+@using PowerMauiApp.Models
+@using PowerMauiApp.Services
+
+@implements IAsyncDisposable
+
+@inject IConfiguration Config
+@inject IJSRuntime JSRuntime
+@inject PbiEmbedService PbiEmbedService
+@inject NavigationManager Navigation
+@inject RouterData DataRouter
+
+<div id="report-container" style="height:100vh; width:100vw"></div>
+
+@code {
+    private IJSObjectReference module;
+    private PowerBI powerBI;
+
+    [Parameter]
+    public string userName { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        powerBI = new PowerBI();
+        Config.GetSection("PowerBI").Bind(powerBI);
+        DataRouter.IsReportActive = true;
+        return Task.CompletedTask;
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/load-report.js");
+        }
+
+        // Get GetEmbedInfo
+        var embedParam = await PbiEmbedService.GetEmbedParams(new Guid(powerBI.WorkspaceId), new Guid(powerBI.ReportId), userName);
+
+        if (module is not null)
+        {
+            await module.InvokeVoidAsync("showReport", embedParam.EmbedToken.Token, embedParam.EmbedReport[0].EmbedUrl, embedParam.EmbedReport[0].ReportId);
+        }
+    }
+
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (module is not null)
+        {
+            await module.DisposeAsync();
+        }
+    }
+}
