@@ -22,7 +22,6 @@ public partial class AppShell : Shell
     private void ReportTab_Appearing(object sender, EventArgs e)
     {
         routerData.IsReport = true;
-        navigationManager?.NavigateTo("/");
     }
 
 }

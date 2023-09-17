@@ -1,0 +1,23 @@
+﻿@page "/"
+
+@code {
+    [Inject]
+    private RouterData routerData { get; set; } = default!;
+    [Inject]
+    private NavigationManager navigationManager { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (routerData.IsReport)
+        {
+            navigationManager.NavigateTo("/report/adminuser");
+        }
+        else
+        {
+            navigationManager.NavigateTo("/fetchdata");
+        }
+
+        await Task.CompletedTask;
+    }
+
+}
